@@ -1,0 +1,395 @@
+[
+  {
+    "id": "TC001",
+    "title": "Task Creation with Valid Data",
+    "description": "Verify that a user can successfully create a task with all required fields correctly filled and optional fields as needed.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the task creation form."
+      },
+      {
+        "type": "action",
+        "description": "Fill in all required fields (title, due date/time, priority, status, category) with valid data."
+      },
+      {
+        "type": "action",
+        "description": "Submit the task creation form."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the task is created successfully and visible in the task list and calendar views."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success notification is displayed."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Task Creation Validation Errors",
+    "description": "Verify that the task creation form enforces validation rules and displays proper error messages when invalid or incomplete data is submitted.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the task creation form."
+      },
+      {
+        "type": "action",
+        "description": "Submit the form with missing required fields."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that validation error messages appear for all missing required fields."
+      },
+      {
+        "type": "action",
+        "description": "Input excessively long text exceeding character limits in title and description fields."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that character limit error messages are shown and input is prevented or truncated appropriately."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Task Update Reflects in UI and Syncs with Calendar",
+    "description": "Verify that updating an existing task modifies the data correctly in the application and triggers real-time synchronization with Google Calendar.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Select an existing task from the task list or calendar view."
+      },
+      {
+        "type": "action",
+        "description": "Change task details such as title, due date/time, priority, or status."
+      },
+      {
+        "type": "action",
+        "description": "Save the changes."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the updated task details appear correctly in all task views."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the corresponding Google Calendar event is updated in near real-time."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Task Deletion with Confirmation and Sync",
+    "description": "Verify that deleting a task triggers a confirmation, removes the task locally, and cascades the deletion to the linked Google Calendar event.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Select a task and initiate the delete action."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure a confirmation dialog appears requiring user acknowledgement."
+      },
+      {
+        "type": "action",
+        "description": "Confirm the deletion."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the task is removed from all local task views."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the linked Google Calendar event is deleted accordingly."
+      },
+      {
+        "type": "assertion",
+        "description": "Check for a success notification after deletion."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Real-time Bi-directional Synchronization with Conflict Resolution",
+    "description": "Verify that local changes propagate to Google Calendar events and remote changes in Google Calendar update local tasks with proper conflict resolution.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Update a task's due date locally."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the Google Calendar event updates in near real-time."
+      },
+      {
+        "type": "action",
+        "description": "Simulate or update the same event in Google Calendar remotely with conflicting changes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that application detects the conflict and resolves it according to pre-defined conflict resolution strategy."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure both local task and Google Calendar event reflect consistent final data after resolution."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Calendar Views Render Correctly and Support Drag-and-Drop",
+    "description": "Verify that calendar views (month, week, day) render tasks and events correctly with accurate dates and times, support drag-and-drop to reschedule tasks, and update tasks accordingly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to calendar view and switch between month, week, and day modes."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm tasks/events appear correctly positioned according to their scheduled date/time and color-coded by category or priority."
+      },
+      {
+        "type": "action",
+        "description": "Drag and drop a task/event to a new time slot or date."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the task's due date/time updates accordingly in the UI and triggers synchronization with Google Calendar."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Offline Mode Task Operations and Sync Recovery",
+    "description": "Verify that the application supports task creation, updates, and deletions while offline by queuing changes locally and synchronizing correctly upon network reconnection.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Go offline by disabling network connection."
+      },
+      {
+        "type": "action",
+        "description": "Create a new task, update an existing task, and delete another task."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tasks appear updated locally with notifications about offline mode."
+      },
+      {
+        "type": "action",
+        "description": "Re-enable network connection."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm all queued changes sync to Google Calendar and local data updates to final synced state without data loss."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "OAuth 2.0 Authentication and Token Management",
+    "description": "Verify secure OAuth 2.0 authentication flow for Google Calendar connection, proper storage of tokens, handling of token expiration, and UI indication of connection status.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Initiate Google Calendar connection via OAuth 2.0 flow."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify successful authorization and secure storage of access and refresh tokens."
+      },
+      {
+        "type": "action",
+        "description": "Simulate token expiration and verify token refresh mechanism is triggered automatically."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the user is not interrupted and connection status remains active."
+      },
+      {
+        "type": "action",
+        "description": "Revoke authorization and verify application correctly shows disconnected status and disables calendar sync features."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Filtering, Sorting, and Searching Tasks",
+    "description": "Verify that task lists and calendar views support comprehensive filtering, sorting, and search capabilities by criteria such as priority, status, category, and due date.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the task list view."
+      },
+      {
+        "type": "action",
+        "description": "Apply filtering by different criteria (priority, status, category)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that only tasks matching filter appear."
+      },
+      {
+        "type": "action",
+        "description": "Sort tasks by due date and priority."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tasks are ordered correctly according to sorting applied."
+      },
+      {
+        "type": "action",
+        "description": "Use the search bar to search for specific keywords in task titles or descriptions."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the search results correctly display matching tasks across views."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Settings Panel Customize UI and Notifications",
+    "description": "Verify that users can configure UI preferences, notification settings, and calendar synchronization options via the settings panel and that changes persist and take effect correctly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the settings panel."
+      },
+      {
+        "type": "action",
+        "description": "Change display preferences such as theme, task list density, and calendar view defaults."
+      },
+      {
+        "type": "action",
+        "description": "Configure notification preferences for task reminders and sync status."
+      },
+      {
+        "type": "action",
+        "description": "Modify Google Calendar synchronization settings including sync frequency and fallback options."
+      },
+      {
+        "type": "action",
+        "description": "Save the settings."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that UI updates immediately to reflect new preferences without errors."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that notifications respect the configured preferences."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that sync settings are honored in subsequent synchronization operations."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Security: Input Sanitization and Protection Against XSS/CSRF",
+    "description": "Verify the application sanitizes user inputs to prevent XSS attacks and includes protections against CSRF in task operations and API calls.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to enter malicious scripts or HTML into task title and description fields."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that inputs are sanitized and no script execution occurs."
+      },
+      {
+        "type": "action",
+        "description": "Attempt CSRF attack simulation by submitting forged requests for task creation, update or deletion."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that CSRF protections prevent unauthorized operations and appropriate error messages are returned or user prompts appear."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Compatibility Across Major Browsers and Devices",
+    "description": "Verify that the application functions correctly and UI renders properly with responsiveness on latest versions of major browsers and on mobile devices.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the application on Chrome, Firefox, Edge, Safari browsers."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that key features (task CRUD, calendar views, syncing) work correctly on each browser."
+      },
+      {
+        "type": "action",
+        "description": "Access the application on mobile devices with different screen sizes."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm UI responsiveness, appropriate element scaling, and functionality including navigation and task operations."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Performance: Load and Rendering with Large Task Set",
+    "description": "Verify application performance under a load of 100+ tasks ensuring fast initial page load, smooth scrolling and interactions, and quick search and sync operations.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Populate the task list with over 100 tasks with varying status, categories, and due dates."
+      },
+      {
+        "type": "assertion",
+        "description": "Measure page load time is below 3 seconds."
+      },
+      {
+        "type": "action",
+        "description": "Interact with task lists and calendar views such as scrolling, drag-and-drop, and filtering."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify interaction is smooth without noticeable lag or UI freezing."
+      },
+      {
+        "type": "action",
+        "description": "Perform search operations and synchronize tasks."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm response times remain quick and consistent."
+      }
+    ]
+  }
+]

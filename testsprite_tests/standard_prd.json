@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "project": "Dashboard Task Manager with Google Calendar Integration",
+    "date": "2026-02-04",
+    "prepared_by": "AI Software Development Manager"
+  },
+  "product_overview": "A web-based task management application that integrates seamlessly with Google Calendar, enabling users to create, view, update, and delete tasks with real-time bi-directional synchronization. It provides intuitive calendar visualizations, multiple task views, and configurable notifications to enhance productivity for individual and small team users.",
+  "core_goals": [
+    "Enable efficient creation, management, and tracking of user tasks.",
+    "Provide real-time two-way synchronization between local tasks and Google Calendar events.",
+    "Offer multiple task viewing modes including list, grid, calendar, and Kanban board for versatile task planning.",
+    "Deliver a responsive and intuitive user interface based on Material Design 3 principles.",
+    "Ensure secure authentication and permissions management using OAuth 2.0 for Google Calendar integration.",
+    "Support offline usage with queued changes and graceful sync recovery.",
+    "Allow comprehensive filtering, sorting, and searching for easy task organization.",
+    "Provide flexible user settings for notifications, display preferences, and privacy controls."
+  ],
+  "key_features": [
+    "Full CRUD operations on tasks with form validation and priority, status, and categorization options.",
+    "Google Calendar OAuth 2.0 integration with secure token management and connection status indicators.",
+    "Real-time, bi-directional syncing of tasks and calendar events including conflict resolution and fallback mechanisms.",
+    "Interactive calendar views with month, week, and day modes supporting drag-and-drop rescheduling and color coding.",
+    "A comprehensive dashboard interface with user profile, notification center, quick stats, and recent activity logs.",
+    "Robust filtering, sorting, and search capabilities across task lists and calendar views.",
+    "Support for offline mode with local caching and automatic sync triggering upon reconnection.",
+    "Extensive settings panel for customization of UI preferences, notifications, and Google Calendar synchronization options."
+  ],
+  "user_flow_summary": [
+    "User registers or logs into the application and can authenticate via OAuth 2.0 to connect their Google Calendar account.",
+    "Users create new tasks providing details such as title, description, due date/time, priority, categories, and status, with validation before saving.",
+    "Tasks are displayed in various views: list, grid, calendar, or Kanban, with options to filter, sort, and search tasks.",
+    "Users can update existing tasks, which triggers automatic synchronization to update the corresponding Google Calendar events in real-time.",
+    "Deleting tasks prompts confirmation and removes linked Google Calendar events accordingly, supporting both soft and hard deletes.",
+    "The application syncs changes bidirectionally with Google Calendar, utilizing webhook real-time updates with fallback polling and conflict resolution strategies.",
+    "Users can customize the application experience via the settings panel, managing preferences around notifications, calendar sync, and privacy/security features.",
+    "Offline mode supports task creation, editing, and deletion locally, queuing all changes to sync once the connection is restored."
+  ],
+  "validation_criteria": [
+    "Task CRUD operations must validate required fields, enforce character limits, and show success/failure notifications.",
+    "Google Calendar OAuth authentication flow must securely obtain and store tokens, with correct handling of token expiration and user permissions.",
+    "Synchronization must be bi-directional, real-time or near real-time, with proper conflict resolution and error handling including retries on failure.",
+    "Calendar views must render correctly with smooth navigation, interactive drag-and-drop, and accurate date/time handling including time zones.",
+    "UI must remain responsive across devices and screen sizes, supporting keyboard navigation and accessibility standards.",
+    "All user actions including create, update, delete, and sync must have appropriate confirmation dialogs and error messages.",
+    "Offline mode changes must queue properly and sync accurately upon reconnection without loss of data.",
+    "Security features including HTTPS, input sanitization, XSS and CSRF protections, and encrypted token storage must be fully implemented and tested.",
+    "The application must pass compatibility tests across major browsers and mobile devices.",
+    "Performance benchmarks include page load time below 3 seconds, smooth rendering of 100+ tasks, and quick response times for search and sync operations."
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Supabase",
+      "Zustand",
+      "Shadcn UI",
+      "Radix UI",
+      "Google Calendar API"
+    ],
+    "features": [
+      {
+        "name": "Calendar Integration",
+        "description": "A comprehensive calendar view that integrates local tasks with Google Calendar events. Features include two-way synchronization, drag-and-drop task management, and an event creation modal.",
+        "files": [
+          "src/components/tasks/CalendarPanel.tsx",
+          "src/components/calendar/GoogleCalendarEventModal.tsx",
+          "supabase/functions/gcal-event-mutate/index.ts"
+        ]
+      },
+      {
+        "name": "App Navigation & Layout",
+        "description": "The main application shell implementing Google Material Design 3. Includes a fixed header with search and profile, and a collapsible sidebar with a FAB and mini-calendar.",
+        "files": [
+          "src/components/layout/AppLayout.tsx",
+          "src/components/layout/Header.tsx",
+          "src/components/layout/Sidebar.tsx"
+        ]
+      }
+    ]
+  }
+}

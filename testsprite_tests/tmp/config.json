@@ -1,0 +1,21 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8080",
+  "backendAuthType": "basic token",
+  "backendUsername": "bintang0saputra880@gmail.com",
+  "backendPassword": "Kyu880*hana",
+  "executionArgs": {
+    "projectName": "Dasbroad v1",
+    "projectPath": "e:\\PROJECT\\Vibe code\\Dasbroad v1",
+    "testIds": [
+      "TC001"
+    ],
+    "additionalInstruction": "Generate and run Cypress test for TC001 only. Ensure the test visits http://localhost:8080",
+    "envs": {
+      "API_KEY": "sk-user-nPZ40AtYEhTzcrV1uKZ9kNjwrS-FgedeQPH3Jbz5M-Hpv5VzY9Ryi09prmFViKvsQHXWdEpChOSQpJA9BXU848epT0D4erCnpXIN0ACwbCozCgUCl8S4kEznZG7Dxz7O4ho"
+    }
+  },
+  "serverPort": 62501
+}

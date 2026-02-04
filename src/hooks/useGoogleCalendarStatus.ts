@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 
-const SUPABASE_URL = 'https://oreoepyofghsmvvsxndh.supabase.co';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 export interface GoogleCalendarStatus {
   isConnected: boolean;
@@ -183,14 +183,14 @@ export function useGoogleCalendarStatus(): UseGoogleCalendarStatusResult {
   // Boot sequence: check connection -> run fullSync if no token -> start watch
   const runBootSequence = useCallback(async () => {
     console.log('[GCal] Running boot sequence...');
-    
+
     // Refresh status first
     await refreshStatus();
-    
+
     // Get fresh status
     const response = await fetch(`${SUPABASE_URL}/functions/v1/gcal-status`);
     if (!response.ok) return;
-    
+
     const data = await response.json();
     if (!data.success || !data.isConnected) {
       console.log('[GCal] Not connected, skipping boot sequence');

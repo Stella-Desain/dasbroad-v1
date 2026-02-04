@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { useAppStore } from "@/stores/appStore";
 
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -18,11 +19,19 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const initAuth = useAuthStore((s) => s.init);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const fetchAppData = useAppStore((s) => s.fetchData);
 
   useEffect(() => {
     const cleanup = initAuth();
     return () => cleanup();
   }, [initAuth]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchAppData();
+    }
+  }, [isAuthenticated, fetchAppData]);
 
   return (
     <QueryClientProvider client={queryClient}>

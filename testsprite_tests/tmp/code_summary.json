@@ -1,0 +1,33 @@
+{
+    "tech_stack": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Supabase",
+        "Zustand",
+        "Shadcn UI",
+        "Radix UI",
+        "Google Calendar API"
+    ],
+    "features": [
+        {
+            "name": "Calendar Integration",
+            "description": "A comprehensive calendar view that integrates local tasks with Google Calendar events. Features include two-way synchronization, drag-and-drop task management, and an event creation modal.",
+            "files": [
+                "src/components/tasks/CalendarPanel.tsx",
+                "src/components/calendar/GoogleCalendarEventModal.tsx",
+                "supabase/functions/gcal-event-mutate/index.ts"
+            ]
+        },
+        {
+            "name": "App Navigation & Layout",
+            "description": "The main application shell implementing Google Material Design 3. Includes a fixed header with search and profile, and a collapsible sidebar with a FAB and mini-calendar.",
+            "files": [
+                "src/components/layout/AppLayout.tsx",
+                "src/components/layout/Header.tsx",
+                "src/components/layout/Sidebar.tsx"
+            ]
+        }
+    ]
+}
