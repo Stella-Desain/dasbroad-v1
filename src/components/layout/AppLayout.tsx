@@ -28,16 +28,18 @@ export function AppLayout({ children }: AppLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Sidebar />
+    <div className="min-h-screen bg-background isolate">
       <Header />
+      <Sidebar />
       <main
         className={cn(
-          'pt-16 min-h-screen sidebar-transition',
-          sidebarCollapsed ? 'pl-[72px]' : 'pl-[280px]'
+          'pt-[64px] min-h-screen transition-all duration-300 ease-in-out',
+          sidebarCollapsed ? 'pl-[72px]' : 'pl-[256px]'
         )}
       >
-        <div className="p-6">{children}</div>
+        <div className="h-[calc(100vh-64px)] overflow-y-auto">
+          {children}
+        </div>
       </main>
     </div>
   );
