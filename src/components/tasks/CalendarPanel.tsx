@@ -57,7 +57,7 @@ import {
 const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
 // Supabase edge function URL
-const SUPABASE_URL = 'https://oreoepyofghsmvvsxndh.supabase.co';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 // Type for cached Google Calendar event from Supabase
 interface CachedGoogleEvent {
@@ -237,7 +237,7 @@ export function CalendarPanel() {
 
   // Google Calendar cache state
   const [cachedEvents, setCachedEvents] = useState<CachedGoogleEvent[]>([]);
-  
+
   // Use the new hook for status management
   const { status, syncing, triggerIncrementalSync, connect } = useGoogleCalendarStatus();
   const isConnected = status?.isConnected ?? false;
@@ -260,7 +260,7 @@ export function CalendarPanel() {
 
       const startStr = format(monthStart, 'yyyy-MM-dd');
       const endStr = format(monthEnd, 'yyyy-MM-dd');
-      
+
       const response = await fetch(
         `${SUPABASE_URL}/functions/v1/gcal-events?start=${startStr}&end=${endStr}`,
         {
@@ -275,7 +275,7 @@ export function CalendarPanel() {
       }
 
       const result = await response.json();
-      
+
       if (!result.success || !result.events) {
         setCachedEvents([]);
         return;
@@ -392,9 +392,9 @@ export function CalendarPanel() {
     return tasks.filter((task) => {
       const startDate = parseISO(task.startDate);
       const endDate = parseISO(task.endDate);
-      return isWithinInterval(date, { start: startDate, end: endDate }) || 
-             isSameDay(date, startDate) || 
-             isSameDay(date, endDate);
+      return isWithinInterval(date, { start: startDate, end: endDate }) ||
+        isSameDay(date, startDate) ||
+        isSameDay(date, endDate);
     });
   };
 
@@ -520,7 +520,7 @@ export function CalendarPanel() {
 
     // Handle local tasks
     const taskData = calendarEventToTask(event, event.id ? tasks.find(t => t.id === event.id) : undefined);
-    
+
     if (event.id && !event.googleEventId) {
       updateTask(event.id, taskData);
       toast.success('Task updated');
@@ -554,7 +554,7 @@ export function CalendarPanel() {
 
   const handleDeleteEvent = async (eventId: string) => {
     const event = allEvents.find(e => e.id === eventId);
-    
+
     if (event?.googleEventId && isConnected) {
       try {
         const response = await fetch(`${SUPABASE_URL}/functions/v1/gcal-event-mutate`, {
@@ -590,8 +590,8 @@ export function CalendarPanel() {
     const dayTasks = getTasksForDay(date);
     const dayGoogleEvents = googleCalendarEvents.filter((event) => {
       return isWithinInterval(date, { start: event.startDate, end: event.endDate }) ||
-             isSameDay(date, event.startDate) ||
-             isSameDay(date, event.endDate);
+        isSameDay(date, event.startDate) ||
+        isSameDay(date, event.endDate);
     });
     return { tasks: dayTasks, googleEvents: dayGoogleEvents };
   };

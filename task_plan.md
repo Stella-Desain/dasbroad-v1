@@ -1,44 +1,31 @@
 # Task Plan
 
-## Phases
-1. **Phase 1: B - Blueprint (Vision & Logic)**
-   - [x] Discovery, Data Schema, Research.
-2. **Phase 2: L - Link (Connectivity)**
-   - [x] Verification, Handshake Scripts.
-3. **Phase 3: A - Architect (The 3-Layer Build)**
-   - [x] Architecture SOPs defined in `architecture/`.
-   - [ ] Navigation logic (if applicable).
-   - [x] Tools implemented in `tools/` (fetch_events.py, verify_supabase.py).
-4. **Phase 4: S - Stylize (Refinement & UI)**
-   - [ ] Payload Refinement, UI/UX, Feedback.
-5. **Phase 5: T - Trigger (Deployment)**
-   - [ ] Cloud Transfer, Automation, Documentation.
+## Phase 1: Blueprint (Vision & Logic)
+- [x] Create project memory files (`gemini.md`, `task_plan.md`, `findings.md`, `progress.md`)
+- [x] Define Data Schemas (Supabase & Zustand)
+- [x] Create Architecture SOPs (Frontend, Backend, UI/UX)
 
-## Goals
-- **North Star:** Dashboard manajemen task project efisien terhubung Google Calendar.
-- **Source of Truth:** Supabase.
-- **Delivery Payload:** Web App di Vercel.
+## Phase 2: Link (Connectivity)
+- [x] Verify Supabase Connection
+- [x] Verify Google Calendar Token Access
+- [x] Test fetching events from cache
 
-## Checklists
-### Phase 1: Blueprint
-- [x] Discovery Questions Answered
-- [x] Data Schema (Input/Output) Defined in `gemini.md`
-- [x] Research Completed
+## Phase 3: Architect (Foundation)
+- [x] Establish Frontend Architecture (React, Tailwind, Shadcn)
+- [x] Establish Backend Architecture (Edge Functions)
 
-### Phase 2: Link
-- [x] `.env` Credentials Verified
-- [x] Minimal Handshake Scripts in `tools/` created and tested
+## Phase 4: Stylize (Refinement & UI)
+- [x] Implement Google Material Design 3 Variables in `index.css`
+- [x] Refactor `Header.tsx` to Google Style Fixed Top Bar
+- [x] Refactor `Sidebar.tsx` to Google Style with FAB and Mini-Calendar
+- [x] Refactor `AppLayout.tsx` to handle fixed layout
 
-### Phase 3: Architect
-- [x] Architecture SOPs defined in `architecture/`
-- [x] Tools implemented in `tools/`
+## Phase 5: Trigger (Sync & Deployment)
+- [x] Verify Two-Way Sync Logic (Code Review of `CalendarPanel` and `gcal-event-mutate`)
+- [x] Refactor Hardcoded URLs to Environment Variables
+- [/] Push to GitHub & Deploy to Vercel
+- [ ] Monitor Vercel Deployment
 
-### Phase 4: Stylize
-- [ ] Payload Refinement
-- [ ] UI/UX Applied
-- [ ] Feedback Collected
-
-### Phase 5: Trigger
-- [ ] Cloud Transfer
-- [ ] Automation Set Up
-- [ ] Maintenance Log Finalized
+## Phase 6: Verify (Testing)
+- [ ] Run Manual Verification of Realtime Sync
+- [ ] (Optional) Harness Integration (Requires Credentials)
