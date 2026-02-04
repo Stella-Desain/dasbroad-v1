@@ -346,7 +346,128 @@ export function CalendarPanel() {
 
   // ... (useEffects remain the same)
 
-  // ... (handler helper functions remain the same)
+  // Calendar grid calculation
+  const calendarDays = useMemo(() => {
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(currentMonth);
+    const startDate = startOfWeek(monthStart);
+    const endDate = endOfWeek(monthEnd);
+    return eachDayOfInterval({ start: startDate, end: endDate });
+  }, [currentMonth]);
+
+  // Combine tasks and Google Calendar events
+  const allEvents = useMemo(() => {
+    const localEvents = tasks.map(taskToCalendarEvent);
+
+    // Merge Google events that don't duplicate local tasks (by ID)
+    const googleEvents = cachedEvents
+      .map(cachedEventToCalendarEvent)
+      .filter(gEvent => !localEvents.some(lEvent => lEvent.id === gEvent.id));
+
+    return [...localEvents, ...googleEvents];
+  }, [tasks, cachedEvents]);
+
+  const googleCalendarEvents = useMemo(() => {
+    return cachedEvents.map(cachedEventToCalendarEvent);
+  }, [cachedEvents]);
+
+  // Handlers
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const task = tasks.find((t) => t.id === active.id);
+    if (task) setActiveTask(task);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { over } = event;
+    setOverDate(over ? (over.id as string) : null);
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const task = tasks.find((t) => t.id === active.id);
+      if (task) {
+        const newDate = over.id as string; // Date string yyyy-MM-dd
+
+        // Optimistic update
+        updateTask(task.id, { startDate: newDate, endDate: newDate });
+
+        // If it's a Google event, sync the change
+        const gEvent = cachedEvents.find(e => e.event_id === task.id);
+        if (gEvent && isConnected) {
+          const calendarEvent = taskToCalendarEvent({ ...task, startDate: newDate, endDate: newDate });
+          await handleSaveEvent(calendarEvent);
+        } else {
+          toast.success('Task moved to ' + newDate);
+        }
+      }
+    }
+
+    setActiveTask(null);
+    setOverDate(null);
+  };
+
+  const handleDayClick = (date: Date, e: React.MouseEvent) => {
+    // Only open if clicking the cell background, not a task
+    if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('calendar-day-number')) {
+      setSelectedDate(date);
+      setSelectedEvent(null);
+      setEventModalOpen(true);
+    }
+  };
+
+  const handleTaskClick = (task: Task, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedEvent(taskToCalendarEvent(task));
+    setEventModalOpen(true);
+  };
+
+  const handleGoogleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedEvent(event);
+    setEventModalOpen(true);
+  };
+
+  const handleShowMore = (date: Date, tasks: Task[], e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOverflowPopup({ date, tasks });
+  };
+
+  const getTaskColor = (task: Task) => {
+    const colors = {
+      blue: 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200',
+      green: 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200',
+      yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-200',
+      red: 'bg-red-100 text-red-700 border-red-200 hover:bg-red-200',
+      purple: 'bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200',
+    };
+    return colors[task.color] || colors.blue;
+  };
+
+  const getEventColor = (event: CalendarEvent) => {
+    // Map Google Calendar color IDs to our color classes
+    // This is a simplified mapping
+    const colorId = event.colorId || '9';
+    const taskColor = getTaskColorFromId(colorId);
+
+    const colors = {
+      blue: 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200',
+      green: 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200',
+      yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-200',
+      red: 'bg-red-100 text-red-700 border-red-200 hover:bg-red-200',
+      purple: 'bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200',
+    };
+    return colors[taskColor] || colors.blue;
+  };
+
+  const getTasksForDay = (date: Date) => {
+    return tasks.filter(task => {
+      // Simple check for now, can be expanded for multi-day events logic matching getEventsForDay
+      return task.startDate === format(date, 'yyyy-MM-dd');
+    });
+  };
 
   const handleSaveEvent = async (event: CalendarEvent) => {
     // Handle Google Calendar events via edge function
