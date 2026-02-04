@@ -1,0 +1,273 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 214 32% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 214 32% 91%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 72px;
+    --header-height: 64px;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 16% 47%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 32% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 217 91% 60%;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 0 84% 60%;
+
+    --task-blue: 217 91% 60%;
+    --task-green: 142 76% 36%;
+    --task-yellow: 38 92% 50%;
+    --task-red: 0 84% 60%;
+    --task-purple: 280 65% 60%;
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 30%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 40%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .sidebar-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .task-pill {
+    @apply px-2 py-1 rounded-md text-xs font-medium truncate cursor-pointer transition-all duration-200;
+  }
+
+  .task-pill-blue {
+    @apply bg-primary/20 text-primary hover:bg-primary/30;
+  }
+
+  .task-pill-green {
+    @apply bg-success/20 text-success hover:bg-success/30;
+  }
+
+  .task-pill-yellow {
+    @apply bg-warning/20 text-warning hover:bg-warning/30;
+  }
+
+  .task-pill-red {
+    @apply bg-destructive/20 text-destructive hover:bg-destructive/30;
+  }
+
+  .panel-container {
+    @apply bg-card rounded-xl border border-border shadow-sm;
+  }
+
+  .panel-header {
+    @apply flex items-center justify-between px-4 py-3 border-b border-border;
+  }
+
+  .menu-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer;
+  }
+
+  .menu-item-active {
+    @apply bg-primary/10 text-primary border-l-4 border-primary -ml-1 pl-5;
+  }
+
+  .menu-item-inactive {
+    @apply text-muted-foreground hover:bg-muted hover:text-foreground;
+  }
+
+  .calendar-cell {
+    @apply min-h-[100px] p-1 border-r border-b border-border bg-card hover:bg-muted/50 transition-colors cursor-pointer;
+  }
+
+  .calendar-cell-today {
+    @apply bg-primary/5;
+  }
+
+  .calendar-day-number {
+    @apply w-7 h-7 flex items-center justify-center text-sm font-medium rounded-full;
+  }
+
+  .calendar-day-today {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .resize-handle {
+    @apply bg-transparent hover:bg-primary/20 transition-colors;
+  }
+
+  .note-item {
+    @apply p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-all duration-200 cursor-pointer;
+  }
+
+  .project-card {
+    @apply p-3 rounded-lg border border-border bg-card hover:bg-muted/50 hover:border-primary/30 transition-all duration-200 cursor-pointer;
+  }
+
+  .priority-badge {
+    @apply px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .priority-low {
+    @apply bg-success/20 text-success;
+  }
+
+  .priority-medium {
+    @apply bg-warning/20 text-warning;
+  }
+
+  .priority-high {
+    @apply bg-destructive/20 text-destructive;
+  }
+
+  .priority-critical {
+    @apply bg-destructive text-destructive-foreground;
+  }
+
+  .stat-card {
+    @apply p-6 rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .icon-button {
+    @apply p-2 rounded-lg hover:bg-muted transition-colors;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2.5 rounded-lg text-muted-foreground font-medium hover:bg-muted hover:text-foreground transition-colors;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2.5 rounded-lg bg-destructive text-destructive-foreground font-medium hover:bg-destructive/90 transition-colors;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+}

@@ -1,0 +1,25 @@
+project_id = "oreoepyofghsmvvsxndh"
+
+[functions.gcal-sync]
+verify_jwt = false
+
+[functions.gcal-webhook]
+verify_jwt = false
+
+[functions.gcal-oauth-callback]
+verify_jwt = false
+
+[functions.gcal-watch-setup]
+verify_jwt = false
+
+[functions.gcal-event-mutate]
+verify_jwt = false
+
+[functions.gcal-events]
+verify_jwt = false
+
+[functions.gcal-watch-renew]
+verify_jwt = false
+
+[functions.gcal-status]
+verify_jwt = false
