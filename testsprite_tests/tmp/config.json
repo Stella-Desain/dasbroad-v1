@@ -1,21 +1,17 @@
 {
   "status": "commited",
-  "type": "backend",
+  "type": "frontend",
   "scope": "codebase",
   "localEndpoint": "http://localhost:8080",
-  "backendAuthType": "basic token",
-  "backendUsername": "bintang0saputra880@gmail.com",
-  "backendPassword": "Kyu880*hana",
   "executionArgs": {
     "projectName": "Dasbroad v1",
     "projectPath": "e:\\PROJECT\\Vibe code\\Dasbroad v1",
-    "testIds": [
-      "TC001"
-    ],
-    "additionalInstruction": "Generate and run Cypress test for TC001 only. Ensure the test visits http://localhost:8080",
+    "testIds": [],
+    "additionalInstruction": "Focus on testing Google Calendar Settings UI: 1) Open settings panel by clicking settings icon, 2) Verify connection status badge (Connected/Not Connected), 3) Check last sync timestamp, 4) Verify watch status indicator, 5) Test \"Sync Now\" button, 6) Test \"Full Sync\" button. Also test calendar UI: monthly view rendering, click empty day to create event, view event details.",
     "envs": {
       "API_KEY": "sk-user-nPZ40AtYEhTzcrV1uKZ9kNjwrS-FgedeQPH3Jbz5M-Hpv5VzY9Ryi09prmFViKvsQHXWdEpChOSQpJA9BXU848epT0D4erCnpXIN0ACwbCozCgUCl8S4kEznZG7Dxz7O4ho"
     }
   },
-  "serverPort": 62501
+  "serverPort": 56268,
+  "proxy": "http://37f927fc-9cd1-4b37-83c6-170763dab99a:5R1zkWNaHs6qbEJ2IPADoQ6zhxPNKVwM@tun.testsprite.com:8080"
 }

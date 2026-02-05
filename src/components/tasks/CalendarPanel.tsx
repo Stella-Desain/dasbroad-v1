@@ -634,41 +634,32 @@ export function CalendarPanel() {
 
             <div className="flex items-center gap-2">
               {/* Google Calendar Controls */}
-              {isConnected ? (
-                <>
-                  <button
-                    onClick={() => triggerIncrementalSync()}
-                    disabled={syncing}
-                    className="icon-button"
-                    title="Sync with Google Calendar"
-                  >
-                    <RefreshCw className={cn('h-4 w-4', syncing && 'animate-spin')} />
-                  </button>
-                  <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-                    <SheetTrigger asChild>
-                      <button className="icon-button" title="Google Calendar Settings">
-                        <Settings2 className="h-4 w-4" />
-                      </button>
-                    </SheetTrigger>
-                    <SheetContent>
-                      <SheetHeader>
-                        <SheetTitle>Calendar Settings</SheetTitle>
-                      </SheetHeader>
-                      <div className="mt-6">
-                        <GoogleCalendarSettings />
-                      </div>
-                    </SheetContent>
-                  </Sheet>
-                </>
-              ) : (
+              <>
                 <button
-                  onClick={connect}
-                  className="btn-secondary flex items-center gap-2 text-sm px-3 py-1.5"
+                  onClick={() => triggerIncrementalSync()}
+                  disabled={syncing}
+                  className="icon-button"
+                  title="Sync with Google Calendar"
                 >
-                  <Settings2 className="h-4 w-4" />
-                  Connect Google
+                  <RefreshCw className={cn('h-4 w-4', syncing && 'animate-spin')} />
                 </button>
-              )}
+                <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
+                  <SheetTrigger asChild>
+                    <button className="icon-button" title="Google Calendar Settings">
+                      <Settings2 className="h-4 w-4" />
+                    </button>
+                  </SheetTrigger>
+                  <SheetContent>
+                    <SheetHeader>
+                      <SheetTitle>Calendar Settings</SheetTitle>
+                    </SheetHeader>
+                    <div className="mt-6">
+                      <GoogleCalendarSettings />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </>
+
 
               <button
                 onClick={() => {

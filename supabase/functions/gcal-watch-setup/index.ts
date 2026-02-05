@@ -23,7 +23,7 @@ async function getValidAccessToken(supabase: any): Promise<string> {
 
   const now = new Date();
   const expiry = token.token_expiry ? new Date(token.token_expiry) : null;
-  
+
   if (token.access_token && expiry && expiry > new Date(now.getTime() + 5 * 60 * 1000)) {
     return token.access_token;
   }
@@ -66,7 +66,7 @@ async function getValidAccessToken(supabase: any): Promise<string> {
   return refreshData.access_token;
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }

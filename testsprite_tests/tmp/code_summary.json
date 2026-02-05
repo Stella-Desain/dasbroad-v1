@@ -1,32 +1,203 @@
 {
     "tech_stack": [
         "TypeScript",
-        "React",
+        "React 18",
         "Vite",
-        "Tailwind CSS",
         "Supabase",
-        "Zustand",
-        "Shadcn UI",
+        "PostgreSQL",
+        "Tailwind CSS",
         "Radix UI",
-        "Google Calendar API"
+        "Zustand",
+        "React Query",
+        "date-fns",
+        "DnD Kit",
+        "Lucide Icons"
     ],
     "features": [
         {
-            "name": "Calendar Integration",
-            "description": "A comprehensive calendar view that integrates local tasks with Google Calendar events. Features include two-way synchronization, drag-and-drop task management, and an event creation modal.",
+            "name": "Google Calendar Integration",
+            "description": "Complete Google Calendar integration with OAuth authentication, event CRUD operations, real-time sync via push notifications, and local caching",
+            "files": [
+                "src/hooks/useGoogleCalendarStatus.ts",
+                "src/components/calendar/GoogleCalendarSettings.tsx",
+                "src/components/calendar/GoogleCalendarEventModal.tsx",
+                "src/components/tasks/CalendarPanel.tsx"
+            ],
+            "api_doc": {
+                "openapi": "3.0.0",
+                "info": {
+                    "title": "Google Calendar Integration API",
+                    "version": "1.0.0"
+                },
+                "paths": {
+                    "/functions/v1/gcal-status": {
+                        "get": {
+                            "summary": "Get Google Calendar connection status",
+                            "responses": {
+                                "200": {
+                                    "description": "Status retrieved successfully",
+                                    "content": {
+                                        "application/json": {
+                                            "schema": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "success": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "isConnected": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "hasSyncToken": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "watchStatus": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "none",
+                                                            "active",
+                                                            "expired",
+                                                            "expiring_soon"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "/functions/v1/gcal-events": {
+                        "get": {
+                            "summary": "Fetch cached Google Calendar events",
+                            "parameters": [
+                                {
+                                    "name": "start",
+                                    "in": "query",
+                                    "required": true,
+                                    "schema": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                {
+                                    "name": "end",
+                                    "in": "query",
+                                    "required": true,
+                                    "schema": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                }
+                            ],
+                            "responses": {
+                                "200": {
+                                    "description": "Events retrieved successfully"
+                                }
+                            }
+                        }
+                    },
+                    "/functions/v1/gcal-event-mutate": {
+                        "post": {
+                            "summary": "Create, update, or delete Google Calendar events",
+                            "requestBody": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "action": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "create",
+                                                        "update",
+                                                        "delete"
+                                                    ]
+                                                },
+                                                "eventId": {
+                                                    "type": "string"
+                                                },
+                                                "event": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "responses": {
+                                "200": {
+                                    "description": "Event mutated successfully"
+                                }
+                            }
+                        }
+                    },
+                    "/functions/v1/gcal-sync": {
+                        "post": {
+                            "summary": "Trigger full or incremental sync",
+                            "requestBody": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "fullSync": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "responses": {
+                                "200": {
+                                    "description": "Sync completed successfully"
+                                }
+                            }
+                        }
+                    },
+                    "/functions/v1/gcal-watch-setup": {
+                        "post": {
+                            "summary": "Create watch channel for push notifications",
+                            "responses": {
+                                "200": {
+                                    "description": "Watch channel created successfully"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "Calendar UI",
+            "description": "Monthly calendar view with drag-and-drop, click-to-create events, and event details modal",
             "files": [
                 "src/components/tasks/CalendarPanel.tsx",
-                "src/components/calendar/GoogleCalendarEventModal.tsx",
-                "supabase/functions/gcal-event-mutate/index.ts"
+                "src/components/tasks/DraggableTask.tsx",
+                "src/components/tasks/DroppableDay.tsx"
             ]
         },
         {
-            "name": "App Navigation & Layout",
-            "description": "The main application shell implementing Google Material Design 3. Includes a fixed header with search and profile, and a collapsible sidebar with a FAB and mini-calendar.",
+            "name": "Settings Panel",
+            "description": "Google Calendar settings UI with status indicators and action buttons for sync and watch management",
             "files": [
-                "src/components/layout/AppLayout.tsx",
-                "src/components/layout/Header.tsx",
-                "src/components/layout/Sidebar.tsx"
+                "src/components/calendar/GoogleCalendarSettings.tsx"
+            ]
+        },
+        {
+            "name": "Task Management",
+            "description": "Local task management with Supabase backend integration",
+            "files": [
+                "src/stores/appStore.ts",
+                "src/components/tasks/TaskList.tsx"
+            ]
+        },
+        {
+            "name": "Authentication",
+            "description": "Supabase authentication with OAuth providers",
+            "files": [
+                "src/integrations/supabase/client.ts"
             ]
         }
     ]
