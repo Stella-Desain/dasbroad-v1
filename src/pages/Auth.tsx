@@ -13,7 +13,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -80,7 +80,7 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setLoading(true);
@@ -128,14 +128,28 @@ export default function Auth() {
   };
 
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin,
-      },
-    });
-    if (error) {
-      toast.error('Failed to sign in with Google');
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          scopes: 'https://www.googleapis.com/auth/calendar',
+          redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        toast.error('Failed to sign in with Google');
+        setLoading(false);
+      }
+      // Loading state will be cleared by auth state change
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -151,14 +165,14 @@ export default function Auth() {
             </div>
             <span className="text-2xl font-bold text-primary-foreground">TaskFlow</span>
           </div>
-          
+
           <h1 className="text-4xl xl:text-5xl font-bold text-primary-foreground mb-6 leading-tight">
             Manage your tasks<br />
             with simplicity
           </h1>
-          
+
           <p className="text-lg text-primary-foreground/80 max-w-md">
-            Stay organized, boost productivity, and collaborate seamlessly with your team. 
+            Stay organized, boost productivity, and collaborate seamlessly with your team.
             TaskFlow makes project management effortless.
           </p>
 

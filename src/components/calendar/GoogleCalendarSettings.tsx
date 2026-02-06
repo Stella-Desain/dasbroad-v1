@@ -203,37 +203,47 @@ export function GoogleCalendarSettings() {
 
         {/* Actions Section */}
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              onClick={triggerIncrementalSync}
-              disabled={syncing}
-              className="w-full"
-            >
-              <RefreshCw className={cn('h-4 w-4 mr-2', syncing && 'animate-spin')} />
-              Sync Now
-            </Button>
+          {!isConnected ? (
+            <div className="p-4 bg-muted rounded-lg text-center">
+              <p className="text-sm text-muted-foreground">
+                Please sign in with Google to enable Calendar features
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  variant="outline"
+                  onClick={triggerIncrementalSync}
+                  disabled={syncing}
+                  className="w-full"
+                >
+                  <RefreshCw className={cn('h-4 w-4 mr-2', syncing && 'animate-spin')} />
+                  Sync Now
+                </Button>
 
-            <Button
-              variant="outline"
-              onClick={triggerFullSync}
-              disabled={syncing}
-              className="w-full"
-            >
-              <RotateCw className={cn('h-4 w-4 mr-2', syncing && 'animate-spin')} />
-              Full Sync
-            </Button>
-          </div>
+                <Button
+                  variant="outline"
+                  onClick={triggerFullSync}
+                  disabled={syncing}
+                  className="w-full"
+                >
+                  <RotateCw className={cn('h-4 w-4 mr-2', syncing && 'animate-spin')} />
+                  Full Sync
+                </Button>
+              </div>
 
-          <Button
-            variant="outline"
-            onClick={startWatch}
-            disabled={watchStarting || watchStatus === 'active'}
-            className="w-full"
-          >
-            <Play className={cn('h-4 w-4 mr-2', watchStarting && 'animate-pulse')} />
-            {watchStatus === 'active' ? 'Watch Active' : 'Start/Restart Watch'}
-          </Button>
+              <Button
+                variant="outline"
+                onClick={startWatch}
+                disabled={watchStarting || watchStatus === 'active'}
+                className="w-full"
+              >
+                <Play className={cn('h-4 w-4 mr-2', watchStarting && 'animate-pulse')} />
+                {watchStatus === 'active' ? 'Watch Active' : 'Start/Restart Watch'}
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Info Section */}

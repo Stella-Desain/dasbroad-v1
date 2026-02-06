@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useAppStore } from "@/stores/appStore";
+import { useGoogleTokenSync } from "@/hooks/useGoogleTokenSync";
 
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -21,6 +22,9 @@ const App = () => {
   const initAuth = useAuthStore((s) => s.init);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const fetchAppData = useAppStore((s) => s.fetchData);
+
+  // Auto-sync Google Calendar tokens after login
+  useGoogleTokenSync();
 
   useEffect(() => {
     const cleanup = initAuth();
