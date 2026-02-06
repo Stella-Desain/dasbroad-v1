@@ -13,11 +13,26 @@ export function useGoogleTokenSync() {
                 // Get current session
                 const { data: { session } } = await supabase.auth.getSession();
 
-                if (!session) return;
+                if (!session) {
+                    console.log('[TokenSync] No session found');
+                    return;
+                }
 
                 // Check if user logged in with Google
                 const provider = session.user.app_metadata?.provider;
-                if (provider !== 'google') return;
+                console.log('[TokenSync] Provider:', provider);
+
+                if (provider !== 'google') {
+                    console.log('[TokenSync] Not a Google login, skipping');
+                    return;
+                }
+
+                // Check provider tokens in session
+                const providerToken = session.user.user_metadata?.provider_token;
+                const providerRefreshToken = session.user.user_metadata?.provider_refresh_token;
+
+                console.log('[TokenSync] Has provider_token:', !!providerToken);
+                console.log('[TokenSync] Has refresh_token:', !!providerRefreshToken);
 
                 // Check if we already have tokens in google_oauth_tokens
                 const { data: existingTokens } = await supabase
@@ -26,24 +41,43 @@ export function useGoogleTokenSync() {
                     .eq('user_label', 'default')
                     .maybeSingle();
 
-                // If tokens already exist, skip sync
-                if (existingTokens) return;
+                if (existingTokens) {
+                    console.log('[TokenSync] Tokens already exist in database');
+                    return;
+                }
+
+                // If no provider tokens, show warning
+                if (!providerToken || !providerRefreshToken) {
+                    console.warn('[TokenSync] No provider tokens in session!');
+                    console.warn('[TokenSync] This means Supabase Auth did not store Google OAuth tokens.');
+                    console.warn('[TokenSync] User needs to re-login or use manual OAuth flow.');
+
+                    toast.error(
+                        'Google Calendar not connected. Please use the Connect button in Calendar settings.',
+                        { duration: 5000 }
+                    );
+                    return;
+                }
+
+                console.log('[TokenSync] Calling sync-google-tokens Edge Function...');
 
                 // Call sync-google-tokens Edge Function
                 const { data, error } = await supabase.functions.invoke('sync-google-tokens');
 
                 if (error) {
-                    console.error('Failed to sync Google tokens:', error);
+                    console.error('[TokenSync] Failed to sync:', error);
                     toast.error('Failed to sync Google Calendar. Please try reconnecting.');
                     return;
                 }
 
                 if (data?.success) {
-                    console.log('Google Calendar tokens synced successfully');
+                    console.log('[TokenSync] ✅ Tokens synced successfully!');
                     toast.success('Google Calendar connected!');
+                } else {
+                    console.warn('[TokenSync] Sync returned non-success:', data);
                 }
             } catch (error) {
-                console.error('Error in token sync:', error);
+                console.error('[TokenSync] Error:', error);
             }
         };
 

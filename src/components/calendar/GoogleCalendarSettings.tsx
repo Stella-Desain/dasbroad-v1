@@ -35,6 +35,7 @@ export function GoogleCalendarSettings() {
     triggerFullSync,
     triggerIncrementalSync,
     startWatch,
+    connect,
   } = useGoogleCalendarStatus();
 
   if (loading) {
@@ -204,10 +205,19 @@ export function GoogleCalendarSettings() {
         {/* Actions Section */}
         <div className="space-y-3">
           {!isConnected ? (
-            <div className="p-4 bg-muted rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">
-                Please sign in with Google to enable Calendar features
-              </p>
+            <div className="space-y-3">
+              <div className="p-4 bg-muted rounded-lg text-center space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Google Calendar requires additional authorization
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Click below to grant Calendar access
+                </p>
+              </div>
+              <Button onClick={connect} className="w-full" size="lg">
+                <Link2 className="h-4 w-4 mr-2" />
+                Connect Google Calendar
+              </Button>
             </div>
           ) : (
             <>
