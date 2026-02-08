@@ -40,26 +40,42 @@ const Index = () => {
           return;
         }
 
-        console.log('OAuth session obtained, syncing Google tokens...');
+        console.log('OAuth session obtained');
 
-        // Call sync function to store tokens
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-google-tokens`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${session.access_token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        // Extract provider tokens from session
+        const providerToken = session.provider_token;
+        const providerRefreshToken = session.provider_refresh_token;
 
-        if (response.ok) {
-          toast.success('Google Calendar connected successfully!');
+        if (!providerToken) {
+          console.error('No provider token in session');
+          toast.error('Failed to get Google Calendar access');
+          setIsHandlingOAuth(false);
+          return;
+        }
+
+        console.log('Provider tokens found, storing in database...');
+
+        // Calculate token expiry (default 1 hour)
+        const tokenExpiry = new Date(Date.now() + 3600 * 1000).toISOString();
+
+        // Store tokens directly in google_oauth_tokens table
+        const { error: upsertError } = await supabase
+          .from('google_oauth_tokens')
+          .upsert({
+            user_label: 'default',
+            refresh_token: providerRefreshToken || null,
+            access_token: providerToken,
+            token_expiry: tokenExpiry,
+            scopes: 'https://www.googleapis.com/auth/calendar',
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'user_label' });
+
+        if (upsertError) {
+          console.error('Failed to store tokens:', upsertError);
+          toast.error('Failed to save Google Calendar connection');
         } else {
-          const errorText = await response.text();
-          console.error('Token sync failed:', errorText);
-          toast.error('Failed to sync Google Calendar');
+          console.log('Tokens stored successfully!');
+          toast.success('Google Calendar connected successfully!');
         }
 
         // Clean up URL
