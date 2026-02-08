@@ -15,7 +15,9 @@ serve(async (req) => {
     const url = new URL(req.url);
     const code = url.searchParams.get('code');
     const error = url.searchParams.get('error');
-    const redirectUri = url.searchParams.get('redirect_uri') || `${url.origin}/functions/v1/gcal-oauth-callback`;
+
+    // FIXED: Always use HTTPS for redirect URI (hardcoded)
+    const redirectUri = 'https://oreoepyofghsmvvsxndh.supabase.co/functions/v1/gcal-oauth-callback';
 
     // Handle error from Google
     if (error) {
@@ -80,9 +82,8 @@ serve(async (req) => {
     }
 
     // Store tokens in database
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient('https://oreoepyofghsmvvsxndh.supabase.co', supabaseServiceKey);
 
     const tokenExpiry = new Date(Date.now() + tokenData.expires_in * 1000);
 
@@ -106,7 +107,7 @@ serve(async (req) => {
 
     // Trigger initial full sync
     console.log('Triggering initial full sync...');
-    const syncResponse = await fetch(`${supabaseUrl}/functions/v1/gcal-sync`, {
+    const syncResponse = await fetch('https://oreoepyofghsmvvsxndh.supabase.co/functions/v1/gcal-sync', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -170,7 +171,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('OAuth callback error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    
+
     return new Response(
       `<!DOCTYPE html>
 <html>

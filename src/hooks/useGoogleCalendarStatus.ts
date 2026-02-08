@@ -150,35 +150,39 @@ export function useGoogleCalendarStatus(): UseGoogleCalendarStatusResult {
     }
   }, [refreshStatus]);
 
-  const connect = useCallback(() => {
-    const width = 600;
-    const height = 700;
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
+  const connect = useCallback(async () => {
+    try {
+      // Use Supabase Auth built-in Google OAuth
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        SUPABASE_URL,
+        import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+      );
 
-    const popup = window.open(
-      `${SUPABASE_URL}/functions/v1/gcal-oauth-callback`,
-      'google-oauth',
-      `width=${width},height=${height},left=${left},top=${top}`
-    );
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          scopes: 'https://www.googleapis.com/auth/calendar',
+          redirectTo: `${window.location.origin}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
 
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'GCAL_OAUTH_SUCCESS') {
-        toast.success('Google Calendar connected!');
-        refreshStatus();
+      if (error) {
+        toast.error(`Failed to connect: ${error.message}`);
+        throw error;
       }
-    };
 
-    window.addEventListener('message', handleMessage);
-
-    const checkClosed = setInterval(() => {
-      if (popup?.closed) {
-        clearInterval(checkClosed);
-        window.removeEventListener('message', handleMessage);
-        refreshStatus();
-      }
-    }, 500);
-  }, [refreshStatus]);
+      // OAuth will redirect, so we don't need to handle success here
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to connect Google Calendar';
+      toast.error(message);
+      throw err;
+    }
+  }, []);
 
   // Boot sequence: check connection -> run fullSync if no token -> start watch
   const runBootSequence = useCallback(async () => {
