@@ -40,15 +40,64 @@ const Index = () => {
           return;
         }
 
-        console.log('OAuth session obtained');
+        console.log('OAuth session obtained, user:', session.user.id);
+        console.log('Session has provider_token:', !!session.provider_token);
+        console.log('Session has provider_refresh_token:', !!session.provider_refresh_token);
 
-        // Extract provider tokens from session
-        const providerToken = session.provider_token;
-        const providerRefreshToken = session.provider_refresh_token;
+        // Try to get tokens from session first
+        let providerToken = session.provider_token;
+        let providerRefreshToken = session.provider_refresh_token;
+
+        // If not in session, fetch from auth.identities
+        if (!providerToken) {
+          console.log('No provider token in session, fetching from auth.identities...');
+
+          const { data: identities, error: identitiesError } = await supabase
+            .from('identities')
+            .select('provider_token, provider_refresh_token, identity_data')
+            .eq('user_id', session.user.id)
+            .eq('provider', 'google')
+            .single();
+
+          if (identitiesError) {
+            console.error('Failed to fetch identities:', identitiesError);
+
+            // Try alternative: use service role to query auth schema
+            console.log('Trying to call sync-google-tokens Edge Function as fallback...');
+            const response = await fetch(
+              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-google-tokens`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${session.access_token}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+
+            if (response.ok) {
+              console.log('Edge Function sync successful!');
+              toast.success('Google Calendar connected successfully!');
+            } else {
+              const errorText = await response.text();
+              console.error('Edge Function sync failed:', errorText);
+              toast.error('Failed to save Google Calendar connection');
+            }
+
+            window.history.replaceState({}, document.title, '/');
+            setIsHandlingOAuth(false);
+            return;
+          }
+
+          providerToken = identities?.provider_token;
+          providerRefreshToken = identities?.provider_refresh_token;
+          console.log('Fetched from identities - has token:', !!providerToken);
+        }
 
         if (!providerToken) {
-          console.error('No provider token in session');
-          toast.error('Failed to get Google Calendar access');
+          console.error('No provider token found in session or identities');
+          console.log('Session keys:', Object.keys(session));
+          toast.error('Failed to get Google Calendar access - no token found');
           setIsHandlingOAuth(false);
           return;
         }
@@ -72,7 +121,8 @@ const Index = () => {
 
         if (upsertError) {
           console.error('Failed to store tokens:', upsertError);
-          toast.error('Failed to save Google Calendar connection');
+          console.error('Error details:', JSON.stringify(upsertError, null, 2));
+          toast.error(`Failed to save Google Calendar connection: ${upsertError.message}`);
         } else {
           console.log('Tokens stored successfully!');
           toast.success('Google Calendar connected successfully!');
